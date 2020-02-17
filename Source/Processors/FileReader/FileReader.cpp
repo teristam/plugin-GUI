@@ -130,11 +130,36 @@ float FileReader::getDefaultSampleRate() const
 int FileReader::getDefaultNumDataOutputs(DataChannel::DataChannelTypes type, int subproc) const
 {
     if (subproc != 0) return 0;
-    if (type != DataChannel::HEADSTAGE_CHANNEL) return 0;
-    if (input)
-        return currentNumChannels;
-    else
-        return 16;
+
+    int data_channel = 0;
+    int aux_channel = 0;
+    int adc_channel = 0;
+    for (int i=0;i<currentNumChannels;i++){
+        if (channelInfo[i].name.contains("CH")){
+            data_channel++;
+        }else if(channelInfo[i].name.contains("AUX")){
+            aux_channel++;
+        }else if(channelInfo[i].name.contains("ADC")){
+            adc_channel++;
+        }
+        
+    }
+
+    if (currentChannel != data_channel + aux_channel + adc_channel){
+        std::cerr << "Sum of channel type does not match the total number of channel" << std::endl;
+    }
+
+
+    switch(type){
+        case DataChannel::HEADSTAGE_CHANNEL:
+            return data_channel;
+        case DataChannel::ADC_CHANNEL:
+            return adc_channel; //hard-coded for now 
+        case DataChannel::AUX_CHANNEL:
+            return aux_channel;
+        default:
+            return 0;
+    }
 }
 
 
