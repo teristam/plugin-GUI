@@ -145,7 +145,7 @@ int FileReader::getDefaultNumDataOutputs(DataChannel::DataChannelTypes type, int
         
     }
 
-    if (currentChannel != data_channel + aux_channel + adc_channel){
+    if (currentNumChannels != data_channel + aux_channel + adc_channel){
         std::cerr << "Sum of channel type does not match the total number of channel" << std::endl;
     }
 
